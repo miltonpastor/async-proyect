@@ -1,37 +1,29 @@
-//-------------FETCH (npm i node-fetch) -----------------
-//----------------------GET------------------------------
-//Para llamar mi API con promesas
-
-import fetch from 'node-fetch'
+import fetch from 'node-fetch';
 const API = 'https://api.escuelajs.co/api/v1';
 
-//funcion que va a recibir la url api y esto me da a retornar un fetch (basicamente una promesa)
-function fetchData(urlApi){
-    return fetch(urlApi); //Promesa
-};
+function postData(urlApi, data){ //data de lo que vamos a enviar
+    const response = fetch(urlApi, {
+        method: 'POST',
+        mode: 'cors', //permisos que va a tener
+        credentials: 'same-origin', //same origin por default
+        headers: { //cabeceras para que me reconozca (que tipo de valor estamos enviando)
+            'Content-Type': 'application/json', //si estuvieramos enviando archivos deberiamos cambiar
+        },   
+        body: JSON.stringify(data) //informacion que quiero transmitir 
+    });
+    return response;
+} 
 
-/* fetchData(`${API}/products`)
-   .then(response => response.json()) //datos obtenidos de la promesa a json 
-   .then(products => {
-        console.log(products);
-   })
-   .then(() => console.log("Hola"))
-   .catch(error => console.log(error)); */
+const data = {
+  "title": "Hey",
+  "price": 9999,
+  "description": "A description",
+  "categoryId": 1,
+  "images": ["https://placeimg.com/640/480/any"],
+  
+}
 
-//--------Fetch anidado
+postData(`${API}/products`, data)
+    .then(response => console.log(response.json()))
+    .then(data => console.log(data))
 
-fetchData(`${API}/products`) //solicitamos productos
-   .then(responde => responde.json()) //a json la solicitud
-   .then(products => { //imprimimos el json y con ese data solicitamos solo un producto
-        console.log(products);
-        return fetchData(`${API}/products/${products[0].id}`)
-    }) 
-   .then(response => response.json()) //a json la solicitud
-   .then(product => { //imprimimos y otra solicitud
-        console.log(product);
-        return fetchData(`${API}/categories/${product.category.id}`)
-   })
-   .then(response => response.json())
-   .then(category => console.log(category))
-   .catch(error => console.log(error))
-   .finally(() => console.log("Finally"));

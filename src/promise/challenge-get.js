@@ -25,12 +25,12 @@ fetchData(`${API}/products`) //solicitamos productos
         console.log(products);
         return fetchData(`${API}/products/${products[0].id}`)
     }) 
-   .then(response => response.json) //a json la solicitud
+   .then(response => response.json()) //a json la solicitud
    .then(product => { //imprimimos y otra solicitud
         console.log(product);
         return fetchData(`${API}/categories/${product.category.id}`)
    })
-   .then(response => response.json)
+   .then(response => response.json())
    .then(category => console.log(category))
    .catch(error => console.log(error))
    .finally(() => console.log("Finally"));
